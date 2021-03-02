@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Custom Styling -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Leaflet Library -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin=""
+    />
+    <script
+      defer
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+      crossorigin=""
+    ></script>
+
+    <!-- Script -->
+    <script defer src="script.js"></script>
+
+    <title>Foodty</title>
+  </head>
+  <body>
+    <div class="sidebar">
+      <img src="logo.png" alt="" class="logo" />
+
+      <ul class="logs">
+        <form class="form hidden">
+          <div class="form__row">
+            <label class="form__label" for="restaurant-name"></label>
+            <input
+              class="form__input form__input--restaurant"
+              type="text"
+              placeholder="Restaurant Name"
+              id="restaurant-name"
+            />
+          </div>
+          <div class="form__row">
+            <label class="form__label" for="rating">Rating (1-5)</label>
+            <input
+              class="form__input form__input--rating"
+              type="number"
+              id="rating"
+              placeholder="5"
+            />
+          </div>
+          <div class="form__row">
+            <label class="form__label" for="price">Price</label>
+            <input
+              class="form__input form__input--price"
+              type="text"
+              placeholder="$"
+            />
+          </div>
+          <div class="form__row">
+            <label class="form__label" for="description"></label>
+            <input
+              class="form__input form__input--description"
+              type="text"
+              placeholder="What did you eat?"
+            />
+          </div>
+        </form>
+      </ul>
+    </div>
+
+    <div id="map"></div>
+  </body>
+</html>
