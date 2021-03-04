@@ -24,7 +24,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-  flex: 1;
+  flex-basis: 30rem;
   background-color: var(--color-dark--1);
   padding: 2rem;
 
@@ -50,16 +50,16 @@ body {
   gap: 1rem;
 
   /* Match height and activity boxes */
-  transition: all 0.5s, transform 1ms;
+  transition: all 1s, transform 1ms;
 }
 
-/* .form.hidden {
+.form.hidden {
   transform: translateY(-30rem);
   height: 0;
   padding: 0 2.25rem;
   margin-bottom: 0;
   opacity: 0;
-} */
+}
 
 .form__input {
   border: none;
@@ -130,6 +130,17 @@ body {
 
 /* Map */
 #map {
-  flex: 2;
+  flex: 1;
   height: 100%;
+}
+
+/* Popup */
+.leaflet-popup .leaflet-popup-content-wrapper {
+  background-color: var(--color-dark--2);
+  color: var(--color-light--1);
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.leaflet-popup .leaflet-popup-tip {
+  background-color: var(--color-dark--2);
 }
