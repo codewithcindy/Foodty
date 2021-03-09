@@ -93,6 +93,10 @@ body {
   height: 5rem;
 }
 
+.form__btn {
+  display: none;
+}
+
 /* Log */
 .log {
   list-style: none;
