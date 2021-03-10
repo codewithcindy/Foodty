@@ -24,6 +24,7 @@ let map, mapEvent;
 class App {
   #map;
   #mapEvent;
+  #logs = [];
 
   constructor() {
     this._getPosition();
@@ -64,6 +65,9 @@ class App {
   }
 
   _newLog(e) {
+    const validInputs = (...inputs) => inputs.every((inp) => inp.length > 0);
+    const positiveInputs = (...inputs) => inputs.every((inp) => inp > 0);
+
     e.preventDefault();
 
     // Get data from form
@@ -71,11 +75,37 @@ class App {
     const rating = inputRating.value;
     const price = inputPrice.options[inputPrice.selectedIndex].text;
     const description = inputDescription.value;
+    const { lat, lng } = this.#mapEvent.latlng;
     let log;
 
-    const { lat, lng } = this.#mapEvent.latlng;
+    // Create new log object
 
-    L.marker([lat, lng])
+    // Check if data is valid
+    if (!validInputs(name, description))
+      return alert("Must fill out all fields");
+    if (!positiveInputs(rating)) return alert("Must enter a positive rating");
+
+    log = new Log([lat, lng], name, rating, price, description);
+
+    // Add object to log array
+    this.#logs.push(log);
+    console.log(log);
+
+    // Render new log on map as marker
+    this._renderLogMarker(log);
+
+    // Render new log on list
+    this._renderLog(log);
+
+    // Hide form + clear input values
+    form.classList.add("hidden");
+    inputRestaurant.value = inputRating.value = inputDescription.value = "";
+
+    // Set local storage
+  }
+
+  _renderLogMarker(log) {
+    L.marker(log.coords)
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -85,15 +115,25 @@ class App {
           closeOnClick: false,
         })
       )
-      .setPopupContent("Food spot")
+      .setPopupContent(`${log.name} <br> ${log.rating}/5 ${log.price}`)
       .openPopup();
+  }
 
-    // Create new log object
-    log = new Log([lat, lng], name, rating, price, description);
-    console.log(log);
+  _renderLog(log) {
+    const html = `<li class="log">
+    <h2>${log.name}</h2>
+    <div class="log__details">
+      <div class="log__details--left">
+        ${log.description}
+      </div>
+      <div class="log__details--right">
+        <div class="details__rating">${log.rating}/5</div>
+        <div class="details__price">${log.price}</div>
+      </div>
+    </div>
+  </li>`;
 
-    // Empty values
-    inputRestaurant.value = inputRating.value = inputDescription.value = "";
+    form.insertAdjacentHTML("afterend", html);
   }
 }
 
