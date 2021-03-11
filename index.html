@@ -41,7 +41,16 @@
       <img src="logo.png" alt="" class="logo" />
 
       <ul class="logs">
-        <form class="form hidden">
+        <div class="sorting">
+          <label>Sort by:</label>
+          <select class="sorting__input" name="" id="">
+            <option value="price">Price</option>
+            <option value="rating">Rating</option>
+            <option value="date">Most recent</option>
+          </select>
+        </div>
+
+        <form class="form hidden" autocomplete="off">
           <div class="form__left">
             <div class="form__row">
               <label class="form__label" for="restaurant-name"></label>
@@ -53,20 +62,31 @@
               />
             </div>
             <div class="form__row">
-              <label class="form__label" for="rating">Rating (1-5)</label>
-              <input
+              <label class="form__label" for="rating">Rating </label>
+              <select class="form__input form__input--rating" id="">
+                <option value="1">✭</option>
+                <option value="2">✭✮</option>
+                <option value="3">✭✮✭</option>
+                <option value="4">✭✮✭✮</option>
+                <option value="5">✭✮✭✮✭</option>
+              </select>
+              <!-- <input
                 class="form__input form__input--rating"
                 type="number"
                 id="rating"
                 placeholder="5"
               />
+              /5 -->
             </div>
             <div class="form__row">
               <label class="form__label" for="price">Price</label>
-              <select id="form__input--price">
-                <option value="$">$</option>
-                <option value="$$">$$</option>
-                <option value="$$$">$$$</option>
+              <select
+                class="form__input form__input--price"
+                id="form__input--price"
+              >
+                <option value="1">$</option>
+                <option value="2">$$</option>
+                <option value="3">$$$</option>
               </select>
               <!-- <input
                 class="form__input form__input--price"
