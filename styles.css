@@ -37,22 +37,10 @@ body {
 .logo {
   height: 4rem;
   align-self: center;
-  margin-bottom: 4rem;
+  margin-bottom: 2.5rem;
 }
 
 /* Sorting */
-.sorting {
-  margin: 1.5rem 0;
-  font-size: 0.8rem;
-  transition: all 1s, transform 1ms;
-  opacity: 1;
-}
-
-.sorting.hidden {
-  transform: translateY(-30rem);
-  display: none;
-  opacity: 0;
-}
 
 .sorting__input {
   font-size: 0.8rem;
@@ -131,12 +119,53 @@ body {
   display: none;
 }
 
+.logs__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 1.5rem 0;
+  font-size: 0.8rem;
+  transition: all 1s, transform 1ms;
+  opacity: 1;
+}
+
+.logs__top.hidden {
+  transform: translateY(-30rem);
+  display: none;
+  opacity: 0;
+}
+
+.logs__clear {
+  text-decoration: none;
+  color: var(--color--light-2);
+}
+
 .log {
   background-color: var(--color-dark--2);
   padding: 1.5rem 2.5rem;
   border-radius: 5px;
   margin-bottom: 1.75rem;
   box-shadow: 3px 3px 5px rgba(56, 56, 56, 0.2);
+
+  position: relative;
+}
+
+.log__delete {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  background: none;
+  border: none;
+}
+
+.log__delete:hover {
+  cursor: pointer;
+}
+
+.fa-trash-alt {
+  color: var(--color-light--2);
+  opacity: 0.8;
 }
 
 .log h2 {

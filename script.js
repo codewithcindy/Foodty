@@ -1,6 +1,10 @@
 "use strict";
 
 const form = document.querySelector(".form");
+const logsTop = document.querySelector(".logs__top");
+const logsList = document.querySelector(".logs__entries");
+const logsListClear = document.querySelector(".logs__clear");
+const logDeleteBtn = document.querySelector(".log__delete");
 const inputRestaurant = document.querySelector(".form__input--restaurant");
 const inputRating = document.querySelector(".form__input--rating");
 const inputPrice = document.getElementById("form__input--price");
@@ -40,9 +44,9 @@ class App {
     // Event handlers
     form.addEventListener("submit", this._newLog.bind(this));
     logsContainer.addEventListener("click", this._moveToPopup.bind(this));
-
-    if (sortingInput.options[sortingInput.selectedIndex].value === "rating")
-      console.log("rating");
+    sortingInput.addEventListener("change", this._sortLogs.bind(this));
+    logsListClear.addEventListener("click", this._reset.bind(this));
+    logDeleteBtn.addEventListener("click", this._deleteLog.bind(this));
   }
 
   _getPosition() {
@@ -76,12 +80,12 @@ class App {
   _showForm(mapE) {
     this.#mapEvent = mapE;
     form.classList.remove("hidden");
-    sorting.classList.add("hidden");
+    // logsTop.classList.add("hidden");
   }
 
   _hideForm() {
     form.classList.add("hidden");
-    sorting.classList.remove("hidden");
+    logsTop.classList.remove("hidden");
     inputRestaurant.value = inputRating.value = inputDescription.value = "";
   }
 
@@ -113,11 +117,11 @@ class App {
     this._renderLogMarker(log);
 
     // Render new log on list
-    this._renderLog(log);
+    // Render log array
+    this._renderLog(this.#logs);
 
     // Hide form + clear input values
     this._hideForm();
-
     // Set local storage
     this._setLocalStorage();
   }
@@ -137,27 +141,91 @@ class App {
       .openPopup();
   }
 
-  _renderLog(log) {
-    const html = `<li class="log" data-id=${log.id}>
-    <h2>${log.name}</h2>
-    <div class="log__details">
-      <div class="log__details--left">
-        ${log.description}
-      </div>
-      <div class="log__details--right">
-        <div class="details__rating">${log.rating}</div>
-        <div class="details__price">${log.price}</div>
-      </div>
-    </div>
-  </li>`;
+  _renderLog(logs) {
+    logsList.innerHTML = "";
+    logsTop.classList.remove("hidden");
 
-    form.insertAdjacentHTML("afterend", html);
+    logs.forEach((log) => {
+      const html = `<li class="log" data-id=${log.id}>
+      <button class="log__delete">
+              <i class="far fa-trash-alt"></i>
+            </button>
+      <h2>${log.name}</h2>
+      <div class="log__details">
+        <div class="log__details--left">
+          ${log.description}
+        </div>
+        <div class="log__details--right">
+          <div class="details__rating">${log.rating}</div>
+          <div class="details__price">${log.price}</div>
+        </div>
+      </div>
+    </li>`;
+
+      logsList.insertAdjacentHTML("afterbegin", html);
+    });
+
+    // logs.forEach((log) => {
+    //   const html = `<li class="log" data-id=${log.id}>
+    //   <h2>${log.name}</h2>
+    //   <div class="log__details">
+    //     <div class="log__details--left">
+    //       ${log.description}
+    //     </div>
+    //     <div class="log__details--right">
+    //       <div class="details__rating">${log.rating}</div>
+    //       <div class="details__price">${log.price}</div>
+    //     </div>
+    //   </div>
+    // </li>`;
+
+    //   logsList.insertAdjacentHTML("afterend", html);
+    // });
   }
 
-  _sortLogsByRating() {
-    this.#logs.sort(function (a, b) {
-      if (a.rating < b.rating) return 1;
-    });
+  _sortLogs(e) {
+    const sortOption = e.target.value;
+
+    if (sortOption === "rating") {
+      const sortByRating = this.#logs.sort(function (a, b) {
+        if (a.rating > b.rating) return 1;
+        if (a.rating < b.rating) return -1;
+      });
+
+      console.log(sortByRating);
+      // logsList.innerHTML = "";
+
+      this._renderLog(sortByRating);
+    }
+
+    if (sortOption === "price") {
+      const sortByPrice = this.#logs.sort(function (a, b) {
+        if (a.price > b.price) return -1;
+        if (a.price < b.price) return 1;
+      });
+
+      console.log(sortByPrice);
+      // logsList.innerHTML = "";
+
+      this._renderLog(sortByPrice);
+    }
+
+    if (sortOption === "date") {
+      const sortByDate = this.#logs.sort(function (a, b) {
+        if (a.date > b.date) return 1;
+        if (a.date < b.date) return -1;
+      });
+
+      // console.log(sortByDate);
+      // logsList.innerHTML = "";
+
+      this._renderLog(sortByDate);
+      // this._renderLog(sortByDate, "date");
+    }
+  }
+
+  _deleteLog(e) {
+    console.log("hey");
   }
 
   _moveToPopup(e) {
@@ -189,13 +257,16 @@ class App {
 
     this.#logs = data;
 
-    this.#logs.forEach((log) => this._renderLog(log));
-    console.log(this.#logs);
+    // this.#logs.forEach((log) => this._renderLog(log));
+    this._renderLog(this.#logs);
+    // console.log(this.#logs);
   }
 
-  reset() {
+  _reset() {
     localStorage.removeItem("logs");
-    location.reload();
+
+    // location.reload();
+    // logsTop.classList.add("hidden");
   }
 }
 

@@ -12,6 +12,14 @@
       rel="stylesheet"
     />
 
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+      integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu"
+      crossorigin="anonymous"
+    />
+
     <!-- Custom Styling -->
     <link rel="stylesheet" href="styles.css" />
 
@@ -41,13 +49,16 @@
       <img src="logo.png" alt="" class="logo" />
 
       <ul class="logs">
-        <div class="sorting">
-          <label>Sort by:</label>
-          <select class="sorting__input" name="" id="">
-            <option value="price">Price</option>
-            <option value="rating">Rating</option>
-            <option value="date">Most recent</option>
-          </select>
+        <div class="logs__top hidden">
+          <div class="sorting">
+            <label>Sort by:</label>
+            <select class="sorting__input" name="" id="">
+              <option value="date">Most recent</option>
+              <option value="price">Price</option>
+              <option value="rating">Rating</option>
+            </select>
+          </div>
+          <a href="" class="logs__clear">Clear all entries</a>
         </div>
 
         <form class="form hidden" autocomplete="off">
@@ -108,37 +119,26 @@
           <input type="submit" class="form__btn" />
         </form>
 
-        <!-- <li class="log">
-          <h2>Omomo</h2>
-          <div class="log__details">
-            <div class="log__details--left">
-              <ul>
-                <li>Oolong milk tea with boba</li>
-                <li>Avocado smash</li>
-              </ul>
+        <div class="logs__entries">
+          <li class="log">
+            <button class="log__delete">
+              <i class="far fa-trash-alt"></i>
+            </button>
+            <h2>Omomo</h2>
+            <div class="log__details">
+              <div class="log__details--left">
+                <ul>
+                  <li>Oolong milk tea with boba</li>
+                  <li>Avocado smash</li>
+                </ul>
+              </div>
+              <div class="log__details--right">
+                <div class="details__rating">4.5</div>
+                <div class="details__price">$</div>
+              </div>
             </div>
-            <div class="log__details--right">
-              <div class="details__rating">4.5</div>
-              <div class="details__price">$</div>
-            </div>
-          </div>
-        </li>
-
-        <li class="log">
-          <h2>Omomo</h2>
-          <div class="log__details">
-            <div class="log__details--left">
-              <ul>
-                <li>Oolong milk tea with boba</li>
-                <li>Avocado smash</li>
-              </ul>
-            </div>
-            <div class="log__details--right">
-              <div class="details__rating">4.5</div>
-              <div class="details__price">$</div>
-            </div>
-          </div>
-        </li> -->
+          </li>
+        </div>
       </ul>
     </div>
 
