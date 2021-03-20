@@ -2,13 +2,15 @@
 
 const form = document.querySelector(".form");
 const logsTop = document.querySelector(".logs__top");
+const logName = document.querySelector(".log__title");
 const logsList = document.querySelector(".logs__entries");
 const logsListClear = document.querySelector(".logs__clear");
-const logDeleteBtn = document.querySelector(".log__delete");
+// const logDeleteBtn = document.querySelector(".log__delete");
 const inputRestaurant = document.querySelector(".form__input--restaurant");
 const inputRating = document.querySelector(".form__input--rating");
 const inputPrice = document.getElementById("form__input--price");
 const inputDescription = document.querySelector(".form__input--description");
+const formHideBtn = document.querySelector(".form__hide__btn");
 const logsContainer = document.querySelector(".logs");
 const sorting = document.querySelector(".sorting");
 const sortingInput = document.querySelector(".sorting__input");
@@ -31,7 +33,7 @@ let map, mapEvent;
 class App {
   #map;
   #mapEvent;
-  #mapZoomLevel = 13;
+  #mapZoomLevel = 11;
   #logs = [];
 
   constructor() {
@@ -43,10 +45,49 @@ class App {
 
     // Event handlers
     form.addEventListener("submit", this._newLog.bind(this));
-    logsContainer.addEventListener("click", this._moveToPopup.bind(this));
     sortingInput.addEventListener("change", this._sortLogs.bind(this));
     logsListClear.addEventListener("click", this._reset.bind(this));
-    logDeleteBtn.addEventListener("click", this._deleteLog.bind(this));
+    formHideBtn.addEventListener("click", this._hideForm.bind(this));
+    logsContainer.addEventListener("click", this._deleteOrMove.bind(this));
+  }
+
+  _deleteOrMove(e) {
+    if (e.target.classList.contains("fa-trash-alt")) {
+      const logEl = e.target.closest(".log");
+      const log = this.#logs.find((log) => log.id === logEl.dataset.id);
+
+      if (!logEl) return;
+
+      if (!this.#map) return;
+
+      const deleteEl = this.#logs.indexOf(log);
+      this.#logs.splice(deleteEl, 1);
+
+      this._renderLog(this.#logs);
+      // this._renderLogMarker(this.#logs);
+
+      this._setLocalStorage();
+
+      // if (this.#logs === []) {
+      //   logsTop.classList.add("hidden");
+      //   // localStorage.removeItem("logs");
+      // }
+    } else {
+      const logEl = e.target.closest(".log");
+
+      if (!logEl) return;
+
+      const log = this.#logs.find((log) => log.id === logEl.dataset.id);
+
+      if (!this.#map) return;
+
+      this.#map.setView(log.coords, this.#mapZoomLevel, {
+        animate: true,
+        pan: {
+          duration: 1,
+        },
+      });
+    }
   }
 
   _getPosition() {
@@ -63,7 +104,8 @@ class App {
     const { latitude } = position.coords;
     const { longitude } = position.coords;
 
-    const coords = [34.0201613, -118.4227626];
+    const coords = [37.6576621, -122.3604431];
+    // const coords = [latitude, longitude];
 
     this.#map = L.map("map").setView(coords, this.#mapZoomLevel);
 
@@ -74,19 +116,22 @@ class App {
 
     this.#map.on("click", this._showForm.bind(this));
 
+    // this._renderLogMarker(this.#logs);
     this.#logs.forEach((log) => this._renderLogMarker(log));
   }
 
   _showForm(mapE) {
     this.#mapEvent = mapE;
     form.classList.remove("hidden");
-    // logsTop.classList.add("hidden");
+    inputRestaurant.focus();
   }
 
-  _hideForm() {
+  _hideForm(e) {
+    // e.preventDefault();
+
     form.classList.add("hidden");
     logsTop.classList.remove("hidden");
-    inputRestaurant.value = inputRating.value = inputDescription.value = "";
+    inputRestaurant.value = inputDescription.value = "";
   }
 
   _newLog(e) {
@@ -114,19 +159,21 @@ class App {
     this.#logs.push(log);
 
     // Render new log on map as marker
-    this._renderLogMarker(log);
+    this._renderLogMarker(this.#logs);
 
-    // Render new log on list
     // Render log array
     this._renderLog(this.#logs);
 
     // Hide form + clear input values
     this._hideForm();
+
     // Set local storage
     this._setLocalStorage();
   }
 
   _renderLogMarker(log) {
+    // console.log(typeof logs);
+    // logs.forEach((log) => {
     L.marker(log.coords)
       .addTo(this.#map)
       .bindPopup(
@@ -139,17 +186,19 @@ class App {
       )
       .setPopupContent(`${log.name} ${log.price}<br> ${log.rating} `)
       .openPopup();
+    // });
   }
 
   _renderLog(logs) {
+    // console.log(typeof logs);
     logsList.innerHTML = "";
     logsTop.classList.remove("hidden");
 
     logs.forEach((log) => {
       const html = `<li class="log" data-id=${log.id}>
       <button class="log__delete">
-              <i class="far fa-trash-alt"></i>
-            </button>
+          <i class="far fa-trash-alt "></i>
+      </button>
       <h2>${log.name}</h2>
       <div class="log__details">
         <div class="log__details--left">
@@ -164,23 +213,6 @@ class App {
 
       logsList.insertAdjacentHTML("afterbegin", html);
     });
-
-    // logs.forEach((log) => {
-    //   const html = `<li class="log" data-id=${log.id}>
-    //   <h2>${log.name}</h2>
-    //   <div class="log__details">
-    //     <div class="log__details--left">
-    //       ${log.description}
-    //     </div>
-    //     <div class="log__details--right">
-    //       <div class="details__rating">${log.rating}</div>
-    //       <div class="details__price">${log.price}</div>
-    //     </div>
-    //   </div>
-    // </li>`;
-
-    //   logsList.insertAdjacentHTML("afterend", html);
-    // });
   }
 
   _sortLogs(e) {
@@ -192,9 +224,6 @@ class App {
         if (a.rating < b.rating) return -1;
       });
 
-      console.log(sortByRating);
-      // logsList.innerHTML = "";
-
       this._renderLog(sortByRating);
     }
 
@@ -203,9 +232,6 @@ class App {
         if (a.price > b.price) return -1;
         if (a.price < b.price) return 1;
       });
-
-      console.log(sortByPrice);
-      // logsList.innerHTML = "";
 
       this._renderLog(sortByPrice);
     }
@@ -216,32 +242,35 @@ class App {
         if (a.date < b.date) return -1;
       });
 
-      // console.log(sortByDate);
-      // logsList.innerHTML = "";
-
       this._renderLog(sortByDate);
-      // this._renderLog(sortByDate, "date");
     }
   }
 
-  _deleteLog(e) {
-    console.log("hey");
-  }
+  // _deleteLog(e) {
+  //   const logDeleteBtn = document.querySelector(".log__delete");
+  //   console.log("yes delete log works");
+  //   // console.log(logDeleteBtn);
+  //   // // console.log(logDeleteBtn.closest(".log"));
+  //   // // console.log(this.#logs);
+  //   // console.log("delte");
+  // }
 
-  _moveToPopup(e) {
-    const logEl = e.target.closest(".log");
+  // _moveToPopup(e) {
+  //   const logEl = e.target.closest(".log");
 
-    if (!logEl) return;
+  //   if (!logEl) return;
 
-    const log = this.#logs.find((log) => log.id === logEl.dataset.id);
+  //   const log = this.#logs.find((log) => log.id === logEl.dataset.id);
 
-    this.#map.setView(log.coords, this.#mapZoomLevel, {
-      animate: true,
-      pan: {
-        duration: 1,
-      },
-    });
-  }
+  //   if (!this.#map) return;
+
+  //   this.#map.setView(log.coords, this.#mapZoomLevel, {
+  //     animate: true,
+  //     pan: {
+  //       duration: 1,
+  //     },
+  //   });
+  // }
 
   _setLocalStorage() {
     localStorage.setItem("logs", JSON.stringify(this.#logs));
@@ -257,15 +286,13 @@ class App {
 
     this.#logs = data;
 
-    // this.#logs.forEach((log) => this._renderLog(log));
     this._renderLog(this.#logs);
-    // console.log(this.#logs);
   }
 
   _reset() {
     localStorage.removeItem("logs");
 
-    // location.reload();
+    location.reload();
     // logsTop.classList.add("hidden");
   }
 }

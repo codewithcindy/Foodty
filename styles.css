@@ -84,6 +84,10 @@ body {
   font-family: "Space Grotesk", sans-serif;
 }
 
+.form__label {
+  font-size: 0.9rem;
+}
+
 .form__input:focus {
   outline: none;
   background-color: #fff;
@@ -96,17 +100,38 @@ body {
 .form__input--rating {
   width: 2.5rem;
 }
-
 .form__input--price {
-  width: 2.5rem;
+  width: 3.3rem;
 }
 
 .form__input--description {
-  height: 5rem;
+  height: 4rem;
+  margin-bottom: 0;
+}
+
+.form__right {
+  display: flex;
+  flex-direction: column;
+}
+
+.form__hide__btn {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: auto;
+  margin-left: auto;
+  border: none;
+  background: none;
+  color: var(--color-light--2);
+  font-size: 0.7rem;
 }
 
 .form__btn {
   display: none;
+}
+
+.btn__submit {
+  width: auto;
 }
 
 /* Logs */

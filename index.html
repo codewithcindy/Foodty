@@ -73,22 +73,15 @@
               />
             </div>
             <div class="form__row">
-              <label class="form__label" for="rating">Rating </label>
-              <select class="form__input form__input--rating" id="">
-                <option value="1">✭</option>
-                <option value="2">✭✮</option>
-                <option value="3">✭✮✭</option>
-                <option value="4">✭✮✭✮</option>
-                <option value="5">✭✮✭✮✭</option>
-              </select>
-              <!-- <input
-                class="form__input form__input--rating"
-                type="number"
-                id="rating"
-                placeholder="5"
-              />
-              /5 -->
+              <label class="form__label" for="description"></label>
+              <textarea
+                class="form__input form__input--description"
+                type="text"
+                placeholder="What did you eat?"
+              ></textarea>
             </div>
+          </div>
+          <div class="form__right">
             <div class="form__row">
               <label class="form__label" for="price">Price</label>
               <select
@@ -100,31 +93,40 @@
                 <option value="3">$$$</option>
               </select>
               <!-- <input
-                class="form__input form__input--price"
-                type="text"
-                placeholder="$"
+              class="form__input form__input--price"
+              type="text"
+              placeholder="$"
               /> -->
             </div>
-          </div>
-          <div class="form__right">
             <div class="form__row">
-              <label class="form__label" for="description"></label>
-              <textarea
-                class="form__input form__input--description"
-                type="text"
-                placeholder="What did you eat?"
-              ></textarea>
+              <label class="form__label" for="rating">Rating </label>
+              <select class="form__input form__input--rating" id="">
+                <option class="rating--option" value="1">✭</option>
+                <option class="rating--option" value="2">✭✮</option>
+                <option class="rating--option" value="3">✭✮✭</option>
+                <option class="rating--option" value="4">✭✮✭✮</option>
+                <option class="rating--option" value="5">✭✮✭✮✭</option>
+              </select>
+              <!-- <input
+                class="form__input form__input--rating"
+                type="number"
+                id="rating"
+                placeholder="5"
+              />
+              /5 -->
             </div>
+            <!-- <button class="btn__submit" type="submit">Add log</button> -->
+            <a href="" class="form__hide__btn">Hide Form</a>
           </div>
           <input type="submit" class="form__btn" />
         </form>
 
         <div class="logs__entries">
-          <li class="log">
+          <!-- <li class="log">
             <button class="log__delete">
               <i class="far fa-trash-alt"></i>
             </button>
-            <h2>Omomo</h2>
+            <h2 class="log__title">Omomo</h2>
             <div class="log__details">
               <div class="log__details--left">
                 <ul>
@@ -137,7 +139,7 @@
                 <div class="details__price">$</div>
               </div>
             </div>
-          </li>
+          </li> -->
         </div>
       </ul>
     </div>
