@@ -5,7 +5,6 @@ const logsTop = document.querySelector(".logs__top");
 const logName = document.querySelector(".log__title");
 const logsList = document.querySelector(".logs__entries");
 const logsListClear = document.querySelector(".logs__clear");
-// const logDeleteBtn = document.querySelector(".log__delete");
 const inputRestaurant = document.querySelector(".form__input--restaurant");
 const inputRating = document.querySelector(".form__input--rating");
 const inputPrice = document.getElementById("form__input--price");
@@ -33,7 +32,7 @@ let map, mapEvent;
 class App {
   #map;
   #mapEvent;
-  #mapZoomLevel = 11;
+  #mapZoomLevel = 10.5;
   #logs = [];
 
   constructor() {
@@ -51,45 +50,6 @@ class App {
     logsContainer.addEventListener("click", this._deleteOrMove.bind(this));
   }
 
-  _deleteOrMove(e) {
-    if (e.target.classList.contains("fa-trash-alt")) {
-      const logEl = e.target.closest(".log");
-      const log = this.#logs.find((log) => log.id === logEl.dataset.id);
-
-      if (!logEl) return;
-
-      if (!this.#map) return;
-
-      const deleteEl = this.#logs.indexOf(log);
-      this.#logs.splice(deleteEl, 1);
-
-      this._renderLog(this.#logs);
-      // this._renderLogMarker(this.#logs);
-
-      this._setLocalStorage();
-
-      // if (this.#logs === []) {
-      //   logsTop.classList.add("hidden");
-      //   // localStorage.removeItem("logs");
-      // }
-    } else {
-      const logEl = e.target.closest(".log");
-
-      if (!logEl) return;
-
-      const log = this.#logs.find((log) => log.id === logEl.dataset.id);
-
-      if (!this.#map) return;
-
-      this.#map.setView(log.coords, this.#mapZoomLevel, {
-        animate: true,
-        pan: {
-          duration: 1,
-        },
-      });
-    }
-  }
-
   _getPosition() {
     if (navigator.geolocation)
       navigator.geolocation.getCurrentPosition(
@@ -104,7 +64,7 @@ class App {
     const { latitude } = position.coords;
     const { longitude } = position.coords;
 
-    const coords = [37.6576621, -122.3604431];
+    const coords = [37.5576621, -122.3604431];
     // const coords = [latitude, longitude];
 
     this.#map = L.map("map").setView(coords, this.#mapZoomLevel);
@@ -116,8 +76,7 @@ class App {
 
     this.#map.on("click", this._showForm.bind(this));
 
-    // this._renderLogMarker(this.#logs);
-    this.#logs.forEach((log) => this._renderLogMarker(log));
+    this._renderLogMarker(this.#logs);
   }
 
   _showForm(mapE) {
@@ -164,33 +123,40 @@ class App {
     // Render log array
     this._renderLog(this.#logs);
 
-    // Hide form + clear input values
+    // Hide form + clear input va1211lues
     this._hideForm();
 
     // Set local storage
     this._setLocalStorage();
   }
 
-  _renderLogMarker(log) {
-    // console.log(typeof logs);
-    // logs.forEach((log) => {
-    L.marker(log.coords)
-      .addTo(this.#map)
-      .bindPopup(
-        L.popup({
-          minWidth: 100,
-          maxWidth: 200,
-          autoClose: false,
-          closeOnClick: false,
-        })
-      )
-      .setPopupContent(`${log.name} ${log.price}<br> ${log.rating} `)
-      .openPopup();
-    // });
+  _renderLogMarker(logs) {
+    let markerContainer = document.querySelector(".leaflet-marker-pane");
+    let popupContainer = document.querySelector(".leaflet-popup-pane");
+    let shadowContainer = document.querySelector(".leaflet-shadow-pane");
+    // const overlayContainer = document.querySelector(".leaflet-overlay-pane");
+
+    markerContainer.innerHTML = "";
+    popupContainer.innerHTML = "";
+    shadowContainer.innerHTML = "";
+
+    logs.forEach((log) => {
+      L.marker(log.coords)
+        .addTo(this.#map)
+        .bindPopup(
+          L.popup({
+            minWidth: 100,
+            maxWidth: 200,
+            autoClose: false,
+            closeOnClick: false,
+          })
+        )
+        .setPopupContent(`${log.name} ${log.price}<br> ${log.rating} `)
+        .openPopup();
+    });
   }
 
   _renderLog(logs) {
-    // console.log(typeof logs);
     logsList.innerHTML = "";
     logsTop.classList.remove("hidden");
 
@@ -246,52 +212,61 @@ class App {
     }
   }
 
-  // _deleteLog(e) {
-  //   const logDeleteBtn = document.querySelector(".log__delete");
-  //   console.log("yes delete log works");
-  //   // console.log(logDeleteBtn);
-  //   // // console.log(logDeleteBtn.closest(".log"));
-  //   // // console.log(this.#logs);
-  //   // console.log("delte");
-  // }
+  _deleteOrMove(e) {
+    const logEl = e.target.closest(".log");
 
-  // _moveToPopup(e) {
-  //   const logEl = e.target.closest(".log");
+    // Return if map has not loaded or if no log element was clicked
+    if (!this.#map || !logEl) return;
 
-  //   if (!logEl) return;
+    const log = this.#logs.find((log) => log.id === logEl.dataset.id);
 
-  //   const log = this.#logs.find((log) => log.id === logEl.dataset.id);
+    // User clicks on the trash icon
+    if (e.target.classList.contains("fa-trash-alt")) {
+      // Remove selected element from logs array
+      const deleteEl = this.#logs.indexOf(log);
+      this.#logs.splice(deleteEl, 1);
 
-  //   if (!this.#map) return;
+      // Re render log
+      this._renderLog(this.#logs);
 
-  //   this.#map.setView(log.coords, this.#mapZoomLevel, {
-  //     animate: true,
-  //     pan: {
-  //       duration: 1,
-  //     },
-  //   });
-  // }
+      // Re render log markers
+      this._renderLogMarker(this.#logs);
+
+      // Update local storage
+      this._setLocalStorage();
+    }
+    // User clicks on the log item
+    else {
+      this.#map.setView(log.coords, this.#mapZoomLevel, {
+        animate: true,
+        pan: {
+          duration: 1,
+        },
+      });
+    }
+  }
 
   _setLocalStorage() {
     localStorage.setItem("logs", JSON.stringify(this.#logs));
   }
 
   _getLocalStorage() {
+    // Get data from storage and turn back int objects
     const data = JSON.parse(localStorage.getItem("logs"));
 
+    // If no data in storage, do nothing
     if (!data) {
       sorting.classList.add("hidden");
       return;
     }
 
+    // If there is data, render it
     this.#logs = data;
-
     this._renderLog(this.#logs);
   }
 
   _reset() {
     localStorage.removeItem("logs");
-
     location.reload();
     // logsTop.classList.add("hidden");
   }
