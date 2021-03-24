@@ -31,6 +31,10 @@ https://foodty.netlify.app/
 
 ![Logs array sorted by price](https://user-images.githubusercontent.com/47929016/112253433-eb065b00-8c1b-11eb-86b7-a90ebd78b1ce.png)
 
+## What Could Be Improved:
+
+- Position the map to show all log markers
+
 ## Credits:
 
 Credit for project idea and ideas for added features go to [Jonas Schmedtmann](https://twitter.com/jonasschmedtman)!
