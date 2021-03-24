@@ -214,6 +214,14 @@ body {
   color: #61ba6d;
 }
 
+/* Copyright */
+.copyright {
+  margin-top: auto;
+  font-size: 0.7rem;
+  text-align: center;
+  color: var(--color-light--1);
+}
+
 /* Map */
 #map {
   flex: 1;
