@@ -64,8 +64,7 @@ class App {
     const { latitude } = position.coords;
     const { longitude } = position.coords;
 
-    const coords = [37.5576621, -122.3604431];
-    // const coords = [latitude, longitude];
+    const coords = [latitude, longitude];
 
     this.#map = L.map("map").setView(coords, this.#mapZoomLevel);
 
